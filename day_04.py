@@ -1,19 +1,7 @@
-# press F5 to copy this to a day file
 from get_src import get
 
 inp = get()
 
-
-inp2 = """MMMSXXMASM
-MSAMXMSMSA
-AMXSXMAAMM
-MSAMASMSMX
-XMASAMXAMM
-XXAMMXXAMA
-SMSMSASXSS
-SAXAMASAAA
-MAMMMXMMMM
-MXMXAXMASX"""
 
 grid = []
 for i in inp.splitlines():
@@ -37,7 +25,6 @@ def solveX(x, y):
             if (grid[y + d[1]][x + d[0]] == "M" and grid[y + d[1] * 2][x + d[0] * 2] == "A" and
                     grid[y + d[1] * 3][x + d[0] * 3] == "S") and 0<=(y + d[1] * 3)<len(grid) and 0<=(x + d[0] * 3)<len(grid[0]):
                 s += 1
-                #print(x,y,d)
         except:
             continue
     return s
@@ -47,11 +34,11 @@ def solveMas(x, y):
         if (grid[y-1][x-1] == "M" and grid[y+1][x+1] == "S" or
                 grid[y - 1][x - 1] == "S" and grid[y + 1][x + 1] == "M") and (grid[y - 1][x + 1] == "M" and grid[y + 1][x - 1] == "S" or
             grid[y - 1][x + 1] == "S" and grid[y + 1][x - 1] == "M"):
-            print(x, y)
             return 1
     return 0
+
 sum_a = 0
-sum_b=0
+sum_b = 0
 for y in range(len(grid)):
     for x in range(len(grid[0])):
         if grid[y][x] == "X":
