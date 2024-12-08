@@ -54,7 +54,6 @@ for y in range(len(grid)):  # get all antenna locations
                 pts[l] = []
             pts[l].append(Point(x, y))
 
-# print(pts)
 lst_a = []
 lst_b = []
 for pt in pts:
