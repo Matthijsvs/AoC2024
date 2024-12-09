@@ -37,33 +37,4 @@ for i in inp.splitlines():
             if res==0:
                 sum+=1
                 break
-
-        """
-        #print("problem with",res)
-        current = copy.deepcopy(l)
-        before =  copy.deepcopy(l)
-        #after =  copy.deepcopy(l)
-
-        del(current[res])
-        del(before[res-1])
-        if res == 1:
-            print(l,current,before)
-        #if res+1 < len(after):
-        #   del (after[res+1])
-        #print(l,current,before,after,res)
-        res=test(current)
-        if res==0:
-            print("ok", current)
-            sum+=1
-            continue
-        else:
-            res=test(before)
-            if res==0:
-                sum+=1
-                continue
-                print("ok",before)
-            else:
-                #print("nok")
-                pass
-        """
 print(sum)
