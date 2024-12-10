@@ -1,7 +1,4 @@
-#press F5 to copy this to a day file
 import copy
-
-from pyatspi import findAllDescendants
 
 from get_src import get
 inp = get()

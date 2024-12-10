@@ -1,4 +1,3 @@
-#press F5 to copy this to a day file
 from get_src import get
 inp = get()
 
@@ -63,8 +62,6 @@ for i in range(len(lst)):
             for j in range(length):
                 #print(j + pos, fileNo)
                 sum_b+=(j+pos)*fileNo
-        #else:
-        #    print(f"{fileNo} has been moved")
     else:
         moved_size=0
         while moved_size<length:
@@ -75,6 +72,5 @@ for i in range(len(lst)):
                 #print(j+pos+moved_size,fileNo)
                 sum_b+=(j+pos+moved_size)*fileNo
             moved_size += act_size
-            # print(f"moved file{fileNo}, gap={length},moved_size={moved_size}")
     pos += length
 print(sum_b)
