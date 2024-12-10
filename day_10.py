@@ -1,24 +1,5 @@
-from get_src import get
-inp = get()
-from collections import namedtuple
-
-Point = namedtuple('Point', ['x', 'y'])
-
-
-N = (0, -1)
-NE = (1, -1)
-E = (1, 0)
-SE = (1, 1)
-S = (0, 1)
-SW = (-1, 1)
-W = (-1, 0)
-NW = (-1, -1)
-
-dirs = [N, E, S, W]
-
-grid = []
-for i in inp.splitlines():
-    grid.append(list(map(int,i)))
+from get_src import *
+grid = get_numgrid()
 
 #FindHead
 heads=[]

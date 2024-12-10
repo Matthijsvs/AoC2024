@@ -1,14 +1,7 @@
-from get_src import get
+from get_src import *
 
-inp = get()
-from collections import namedtuple
-
-Point = namedtuple('Point', ['x', 'y'])
-
-grid = []
+grid = get_grid()
 pts = {}
-for i in inp.splitlines():
-    grid.append(list(i))
 
 
 def inside(n):

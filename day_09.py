@@ -1,9 +1,6 @@
-from get_src import get
-inp = get()
+from get_src import get, get_numgrid
 
-lst = list(inp.strip())
-lst = list(map(int, lst))
-
+lst = get_numgrid()[0]
 def isFile(i):
     return i%2==0
 
@@ -49,8 +46,7 @@ print(sum_a)
 
 #######################[ part2 ]##############################
 
-lst = list(inp.strip())
-lst = list(map(int, lst))
+lst = get_numgrid()[0]
 
 sum_b=0
 pos = 0         #virtual position

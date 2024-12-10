@@ -1,26 +1,10 @@
-from get_src import get
+from get_src import *
 
-inp = get()
-
-
-grid = []
-for i in inp.splitlines():
-    grid.append(list(i))
-
+grid = get_grid()
 
 def solveX(x, y):
-    N = (0, -1)
-    NE = (1, -1)
-    E = (1, 0)
-    SE = (1, 1)
-    S = (0, 1)
-    SW = (-1, 1)
-    W = (-1, 0)
-    NW = (-1, -1)
-
-    dirs = [N, NE, E, SE, S, SW, W, NW]
     s = 0
-    for d in dirs:
+    for d in dirs8:
         try:
             if (grid[y + d[1]][x + d[0]] == "M" and grid[y + d[1] * 2][x + d[0] * 2] == "A" and
                     grid[y + d[1] * 3][x + d[0] * 3] == "S") and 0<=(y + d[1] * 3)<len(grid) and 0<=(x + d[0] * 3)<len(grid[0]):
