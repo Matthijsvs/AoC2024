@@ -1,3 +1,5 @@
+from operator import truediv
+
 from get_src import *
 
 sample = """##########
@@ -38,6 +40,14 @@ def step(P,dir):
     return Point(P.x+dir[0],P.y+dir[1])
 
 def pprint(pos):
+    return
+    for x in range(len(large_grid[0])):
+        print(x//10,end='')
+    print()
+    for x in range(len(large_grid[0])):
+        print(x%10,end='')
+    print()
+
     for y in range(len(large_grid)):
         for x in range(len(large_grid[0])):
             if Point(x,y) in boxL:
@@ -50,7 +60,7 @@ def pprint(pos):
                 print(large_grid[y][x],end='')
         print()
 
-inp = get(sample2)
+inp = get()
 
 cmds = []
 #part 1
@@ -118,26 +128,49 @@ def movebox(point, direction, local_box):
         local_box.append(boxtarget)
         return True
 
-def movebox2(point,direction):
-    boxtarget = (step(point[0], direction),step(point[1], direction))
-    if large_grid[boxtarget[0].y][boxtarget[0].x] == "#" or large_grid[boxtarget[1].y][boxtarget[1].x] == "#":
+def do_move(point,direction,pts):
+    boxtarget = step(point, direction)
+    #print(f"moving {point} to {boxtarget}")
+    if point in pts:
+        return True
+    pts.add(point)
+   #print(f"point {point} was not yet done")
+    #find counterpart of box
+    if point in boxL:
+        p2 = Point(point.x+1,point.y)
+        do_move(boxtarget, direction, pts)
+        do_move(p2,direction,pts)
+        boxL.remove(point)
+        boxL.append(boxtarget)
+    elif point in boxR:
+        p2 = Point(point.x-1, point.y)
+        do_move(boxtarget, direction, pts)
+        do_move(p2, direction, pts)
+        boxR.remove(point)
+        boxR.append(boxtarget)
+
+def can_move(point, direction, done):
+    if large_grid[point.y][point.x] == "#":
         return False
-    for i in boxtarget:
-        if findbox(i,direction):
-            return movebox2(findbox(i,direction),direction)
-    else:
-        box2.remove(point)
-        box2.append(boxtarget)
+    elif ((point not in boxL) and (point not in boxR)):
         return True
 
-def can_move(p,direction):
-    if True:
-        if (Point(p.x,p.y),Point(p.x+1,p.y)) in box2:
-            return (Point(p.x,p.y),Point(p.x+1,p.y))
-        elif (Point(p.x-1,p.y),Point(p.x,p.y)) in box2:
-            return (Point(p.x-1,p.y),Point(p.x,p.y))
-    return None
+    boxtarget = step(point, direction)
+    done.add(point)
+    #find counterpart of box
+    if point in boxL:
+        p2 = Point(point.x+1,point.y)
+    elif point in boxR:
+        p2 = Point(point.x-1, point.y)
 
+    ans = can_move(boxtarget, direction, done)
+    #print(f"check {boxtarget} is free:{ans}")
+    if p2 not in done:
+        ans &= can_move(step(p2, direction), direction, done)
+        #print(f"check {p2} is free:{ans}")
+    return ans
+
+############## part 1 ##############
 for c in cmds:
     target = step(current_pos,direction[c])
     if grid[target.y][target.x]=="#": #walk into wall
@@ -148,14 +181,15 @@ for c in cmds:
     else:
         current_pos = target
 
+############## part 2 ##############
 for c in cmds:
-    pprint(current_pos2)
-    print(c)
     target = step(current_pos2,direction[c])        #this is the position we want to go being a fish
     if large_grid[target.y][target.x]=="#": #walk into wall
         continue
-    elif k:=can_move(target,c):
-        if movebox2(k,direction[c]):
+    elif target in boxL or target in boxR:
+        plist=set()
+        if can_move(target,direction[c],plist):
+            do_move(target,direction[c],set())
             current_pos2 = target
     else:
         current_pos2 = target
@@ -166,6 +200,6 @@ for i in box:
 print(sum_a)
 
 sum_a=0
-for i,j in box2:
+for i in boxL:
     sum_a+=i.x+i.y*100
 print(sum_a)
