@@ -14,7 +14,7 @@ def solveA(xa, ya, xb, yb, xp, yp):
     eq1 = Eq((a * x1) + (b * x2), p1)
     eq2 = Eq((a * y1) + (b * y2), p2)
     sol_dict = solve((eq1, eq2), (a, b))
-    print(sol_dict)
+    #print(sol_dict)
     res_a = eval(str(sol_dict[a]))
     res_b = eval(str(sol_dict[b]))
     if (res_a % 1) == 0 and res_b % 1 == 0:
