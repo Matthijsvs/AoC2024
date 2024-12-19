@@ -13,51 +13,56 @@ bwurrg
 brgr
 bbrgwb"""
 inp = get()
-
+cache={}
 towels=[]
 recipes=[]
+maxrecipe=""
 for i in inp.splitlines():
     if "," in i:
         tmp=i.split(",")
         for i in tmp:
+            if len(i.strip())>len(maxrecipe):
+                maxrecipe = i.strip()
             recipes.append(i.strip())
     elif i!="":
         towels.append(i)
 
+maxrecipe=len(maxrecipe)
 
 
-
-def take2(towel:str,start):
+def calculate_single(towel:str, start):
     if start==len(towel):
         return True
     res=[]
-    for i in range(start,len(towel)+1):
+    for i in range(start,start+maxrecipe+1):
         if towel[start:i] in recipes:
-            #print(f"{towel[start:]} starts with {towel[start:i]}")
-            if take2(towel,i):
+            if calculate_single(towel, i):
                 return True
     return False
 
-def take(towel:str,start):
+def calculate_all(towel:str, start):
     if start==len(towel):
         return 1
     res=0
-    for i in range(start,len(towel)+1):
+    for i in range(start,min(start+maxrecipe+1,len(towel)+1)):
         if towel[start:i] in recipes:
-            #print(f"{towel[start:]} starts with {towel[start:i]}")
-            res+=take(towel,i)
+            if i not in cache:
+                q = calculate_all(towel, i)
+                cache[i]=q
+                res += q
+            else:
+                res += cache[i]
+
     return res
 
 a=0
 b=0
 for towel in towels:
-    #print(f"\n[{towel}]")
-    if take2(towel,0):
+    if calculate_single(towel, 0):
         a+=1
 
-    tmp=take(towel,0)
-    b+=tmp
-    print(f"{towel},{tmp}")
+    cache = {}
+    b+=calculate_all(towel, 0)
 
 print(a)
 print(b)
