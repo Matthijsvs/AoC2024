@@ -77,7 +77,38 @@ def find_pad(code,pad):
         start = pad[letter]
     return list(set(path))
 
+def find_pad2(code,pad):
+    start = pad["A"]
+    path=[]
+    for letter in code:
+        t = find_pt(start, letter, pad,"")
+        if path == []:
+            path.extend(t)
+        else:
+            newpath = []
+            for i in t:
+                newpath.extend(x+i for x in path)
+            path = newpath
+        start = pad[letter]
+    return list(set(path))
+
 def iter_dpad(level,cmd:str, sol):
+    sol[level]=[]
+
+    if level == 0:
+        sol[level] = find_pad2(cmd,pt_numpad) #, find_pad(cmd,pt_numpad, False)]
+    else:
+        iter_dpad(level - 1, cmd, sol)
+        for i in set(sol[level-1]):
+            sol[level].extend(find_pad2(i,pt_dirpad))
+    q = int(1e12)
+    for i in set(sol[level]):
+        print(i)
+        q = min(len(i),q)
+    return q
+
+
+def iter_dpad2(level,cmd:str, sol):
     sol[level]=[]
 
     if level == 0:
@@ -92,13 +123,14 @@ def iter_dpad(level,cmd:str, sol):
         q = min(len(i),q)
     return q
 
+
 sum_a = 0
 sum_a2 = 0
 for i in inp.splitlines():
     code = list(i.strip())
     #print(i)
     numeric = int(i.replace("A", ""))
-    complexity = iter_dpad(2,i, {})
+    complexity = iter_dpad2(2,i, {})
     sum_a += complexity * numeric
     print(i,complexity,numeric)
     #print(i,":", find_dirpad(find_dirpad(strcmd)))
