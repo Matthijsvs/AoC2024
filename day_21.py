@@ -1,4 +1,4 @@
-# press F5 to copy this to a day file
+#import functools
 from get_src import *
 
 sample = """029A
@@ -8,8 +8,12 @@ sample = """029A
 379A"""
 inp = get(sample)
 
-grid = [["7", "8", "9"], ["4", "5", "6"], ["1", "2", "3"], ["", "0", "A"]]
-grid2 = [["", "^", "A"], ["<", "v", ">"]]
+grid = [["7", "8", "9"],
+        ["4", "5", "6"],
+        ["1", "2", "3"],
+        ["", "0", "A"]]
+grid2 = [["", "^", "A"],
+         ["<", "v", ">"]]
 pt_numpad = {}
 for y in range(len(grid)):
     for x in range(len(grid[0])):
@@ -21,107 +25,85 @@ for y in range(len(grid2)):
         pt_dirpad[grid2[y][x]] = Point(x, y)
 
 
-
-def find_dirpad(code: str):
+#@cache
+def find_dirpad(code: str,hor=True):
     start = pt_dirpad["A"]
     str_cmd = ""
     for j in code:
         up = (start.y - pt_dirpad[j].y)
         left = (start.x - pt_dirpad[j].x)
         cmd = ""
-
-        if start.x==0:
-            if left > 0:
-                cmd += "<" * left
-            else:
-                cmd += ">" * abs(left)
-
-            if up > 0:
-                cmd += "^" * up
-            else:
-                cmd += "v" * abs(up)
+        if hor:
+                cmd += "<" * left + ">" * -left
+                cmd += "^" * up+ "v" * -up
         else:
-            if up > 0:
-                cmd += "^" * up
-            else:
-                cmd += "v" * abs(up)
-
-            if left > 0:
-                cmd += "<" * left
-            else:
-                cmd += ">" * abs(left)
+                cmd += "^" * up + "v" * -up
+                cmd += "<" * left + ">" * -left
 
         start = pt_dirpad[j]
         str_cmd += cmd + "A"
     return str_cmd
 
-def find_dirpad2(start,code: str):
-    str_cmd = ""
-    for j in code:
-        up = (start.y - pt_dirpad[j].y)
-        left = (start.x - pt_dirpad[j].x)
-        cmd = ""
+def find_pt(start,stop,pad,prev):
+    up = (start.y - pad[stop].y)
+    left = (start.x - pad[stop].x)
+    if start.x == pad[""] or start.x == pad[""]:
+        cmd = "^" * up + "v" * -up
+        cmd += "<" * left + ">" * -left
+        cmd += "A"
+        return [prev+cmd]
+    else:
+        cmd = "<" * left + ">" * -left
+        cmd += "^" * up + "v" * -up
+        cmd += "A"
 
-        if start.x==0:
-            if left > 0:
-                cmd += "<" * left
-            else:
-                cmd += ">" * abs(left)
+        cmd2 = "^" * up + "v" * -up
+        cmd2 += "<" * left + ">" * -left
+        cmd2 += "A"
+        return [prev+cmd,prev+cmd2]
 
-            if up > 0:
-                cmd += "^" * up
-            else:
-                cmd += "v" * abs(up)
+def find_pad(code,pad):
+    start = pad["A"]
+    path=[]
+    for letter in code:
+        t = find_pt(start, letter, pad,"")
+        if path == []:
+            path.extend(t)
         else:
-            if up > 0:
-                cmd += "^" * up
-            else:
-                cmd += "v" * abs(up)
+            newpath = []
+            for i in t:
+                newpath.extend(x+i for x in path)
+            path = newpath
+        start = pad[letter]
+    return list(set(path))
 
-            if left > 0:
-                cmd += "<" * left
-            else:
-                cmd += ">" * abs(left)
+def iter_dpad(level,cmd:str, sol):
+    sol[level]=[]
 
-        start = pt_dirpad[j]
-        str_cmd += cmd + "A"
-    return str_cmd,start
+    if level == 0:
+        sol[level] = find_pad(cmd,pt_numpad) #, find_pad(cmd,pt_numpad, False)]
+    else:
+        iter_dpad(level - 1, cmd, sol)
+        for i in set(sol[level-1]):
+            sol[level].extend(find_pad(i,pt_dirpad))
+    q = int(1e12)
+    for i in set(sol[level]):
+        print(i)
+        q = min(len(i),q)
+    return q
 
 sum_a = 0
 sum_a2 = 0
 for i in inp.splitlines():
-    start = pt_numpad["A"]
-
     code = list(i.strip())
+    #print(i)
     numeric = int(i.replace("A", ""))
-    print(i)
-    l = 0
-    strcmd = ""
-    last_pos=pt_dirpad["A"]
-    last_pos2 = pt_dirpad["A"]
-    for j in code:
-        up = (start.y - pt_numpad[j].y)
-        left = (start.x - pt_numpad[j].x)
-        cmd = ""
-        if up > 0:
-            cmd += "^" * up
-        else:
-            cmd += "v" * abs(up)
-        if left > 0:
-            cmd += "<" * left
-        else:
-            cmd += ">" * abs(left)
-        strcmd += cmd + "A"
-        print(f"n: {cmd:<20s}{j:>10s}")
-        seq,last_pos=find_dirpad2(last_pos,cmd + "A")
-        seq2, last_pos2 = find_dirpad2(last_pos2,seq)
-        print("2:",seq)
-        print("3:", seq2)
-        start = pt_numpad[j]
-        sum_a2 += len(seq2)*numeric
+    complexity = iter_dpad(2,i, {})
+    sum_a += complexity * numeric
+    print(i,complexity,numeric)
     #print(i,":", find_dirpad(find_dirpad(strcmd)))
     #print(len(find_dirpad(find_dirpad(strcmd))), numeric)
-    sum_a += len(find_dirpad(find_dirpad(strcmd))) * numeric
+    #sum_a += len(find_dirpad(find_dirpad(strcmd))) * numeric
 
 print(sum_a)
 print(sum_a2)
