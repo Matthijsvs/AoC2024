@@ -22,8 +22,7 @@ sample = """###############
 #...#...#...###
 ###############"""
 
-grid = get_grid(sample)
-
+grid = get_grid()
 
 
 @dataclass
@@ -114,7 +113,7 @@ def step(P,dir):
 
 dira={}
 sum_a=0
-print(a)
+#print(a)
 for stp in range(len(a)):
     p = a[stp]
     for dir in dirs4:
@@ -129,24 +128,39 @@ for stp in range(len(a)):
                     dira[discount]=1
                 else:
                     dira[discount]+=1
-print(dira)
+#print(dira)
 print(sum_a)
 dirb={}
+sum_b=0
+
+for stp in range(len(a)):
+    for y in range(-20,21):
+        for x in range(-20,21):
+            if abs(x)+abs(y)>20:
+                continue
+            q = Point(a[stp].x+x,a[stp].y+y)
+            if q in a and a.index(q)>=stp+(abs(x)+abs(y))+100:
+                sum_b+=1
+                continue
+print(sum_b)
+sum_b=0
 for stp in range(0,len(a)):
-    for stp2 in range(stp+52,len(a)):
+    for stp2 in range(stp+50,len(a)):
         dx=a[stp2].x-a[stp].x
         dy=a[stp2].y-a[stp].y
         l = abs(dx)+abs(dy)
-        if l<=18:
-            pwon =stp2-stp-2
+        if (stp2-stp)-l>=100:
+            pwon =stp2-stp-l
+            sum_b+=1
             if pwon in dirb:
                 dirb[pwon]+=1
             else:
                 dirb[pwon]=1
+print(sum_b)
+
 for k in sorted(dirb.keys()):
-    if k%2==0:
-        print(dirb[k],k)
-#print(sum_a)
+    print(dirb[k],k)
+print(sum_a)
 with Image.new("RGBA", (len(grid[0]), len(grid)), (255, 255, 255, 255)) as im:
     for y in range(len(grid)):
         for x in range(len(grid[0])):
