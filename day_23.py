@@ -34,21 +34,11 @@ tb-vc
 td-yn"""
 inp = get(sample)
 
-p = {}
-z = []
-for i in inp.splitlines():
-    a,b = i.strip().split("-")
-    for k in z:
-        if a in k:
-            k.append(b)
-            break
-        elif b in k:
-            k.append(a)
-            break
-    else:
-        z.append([a,b])
-    #print(z)
-    """if a in p:
+p= {}
+for node2 in inp.splitlines():
+    a,b = node2.strip().split("-")
+
+    if a in p:
         p[a].append(b)
     else:
         p[a]=[b]
@@ -56,28 +46,33 @@ for i in inp.splitlines():
         p[b].append(a)
     else:
         p[b]=[a]
-    
-q = []
+
+ic = []
 for i in p:
-    if "t" in i:
-        print(i,p[i])
-        q.append(p[i])
-print(q)"""
+    print(i,p[i])
+for node1 in p:
+    for node2 in p[node1]:
+        for node3 in p[node2]:
+            if node1 in p[node3]:
+                t = [node1,node2,node3]
+                t.sort()
+                ic.append("-".join(t))
 
-qq = []
-for i in z:
-    p = set(i)
-    if len(p)>3:
-        for j in range(len(p)-3):
-            qq.append(list(p)[j:j+3])
-    else:
-        qq.append(list(p))
+def find_myself(node,link,level,chain):
+    for subnode in p[link]:
+        if subnode == node:
+            return chain
+        else:
+            chain = find_myself(node,subnode, level + 1, f"chain,subnode,")
+    return chain
 
-z = []
-for q in qq:
-    q.sort()
-    z.append("-".join(q))
-z = set(z)
-print(len(z))
-for i in z:
-    print(i)
+for node1 in p:
+    print(node1)
+    print(find_myself(node1,node1,0,node1))
+
+a = 0
+for i in set(ic):
+    if "-t" in i or i.startswith("t"):
+        a+=1
+
+print(a)
