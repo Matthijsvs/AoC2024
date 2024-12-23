@@ -1,3 +1,5 @@
+import copy
+
 from get_src import *
 
 sample = """kh-tc
@@ -60,15 +62,19 @@ for node1 in p:
 
 def find_myself(node,link,level,chain):
     for subnode in p[link]:
-        if subnode == node:
+        if level>1 and subnode == node:
+            print(chain)
             return chain
         else:
-            chain = find_myself(node,subnode, level + 1, f"chain,subnode,")
+            if subnode not in chain:
+                chain2 = copy.deepcopy(chain)
+                chain2.append(subnode)
+                chain = find_myself(node,subnode, level + 1, chain2)
     return chain
 
 for node1 in p:
     print(node1)
-    print(find_myself(node1,node1,0,node1))
+    print(find_myself(node1,node1,0,[node1]))
 
 a = 0
 for i in set(ic):
