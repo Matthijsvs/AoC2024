@@ -29,7 +29,7 @@ def get(sample=None):
     if not downloaded:  # download into cache folder
         print(f"downloading {fname}")
         day_number = int(day.replace("day_", ""))
-        ans = requests.get(f"https://adventofcode.com/2024/day/{day_number}/input", cookies={"session": cookie})
+        ans = requests.get(f"https://adventofcode.com/2024/day/{day_number}/input", cookies={"session": cookie},verify=False)
         with open(fname, "wt") as f:
             f.write(ans.text)
             return ans.text
