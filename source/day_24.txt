@@ -115,7 +115,7 @@ prk XOR hsj -> z16
 y22 XOR x22 -> wct
 jwd OR fvv -> nbs
 ckj OR kjg -> khc
-dgr XOR rrd -> z33
+rrd XOR dgr -> z33
 x00 AND y00 -> njb
 x08 AND y08 -> dmd
 y15 AND x15 -> knn
@@ -264,7 +264,7 @@ bkj XOR fhq -> dtv
 vdj XOR hvq -> z07
 gpj OR njh -> jmr
 dws XOR jkb -> z38
-vvm OR vtc -> wrd
+vtc OR vvm -> wrd
 jvp OR rjs -> jfk
 y15 XOR x15 -> bbn
 y34 XOR x34 -> djc
