@@ -1,16 +1,11 @@
 from get_src import *
 
 inp = get()
-replace={}
-#12 OR??,29 AND,37 AND,45 OR??
-replace =       {"dtv":"z37","z37":"dtv"}
-replace.update({"z29":"gdv","gdv":"z29"})
-replace.update({"fsf":"fgc","fgc":"fsf"})
 
+replace =       {"dtv":"z37","z37":"dtv"}
+replace.update({"z29":"mtj","mtj":"z29"})
+replace.update({"z12":"fgc","fgc":"z12"})
 replace.update({"dgr":"vvm","vvm":"dgr"})
-b=list(replace.keys())
-b.sort()
-print(",".join(b))
 
 def do_sum(x=-1, y=-1):
     d = {}
@@ -54,6 +49,10 @@ def do_sum(x=-1, y=-1):
 
 
 print(do_sum())
+b=list(replace.keys())
+b.sort()
+print(",".join(b))
+exit()
 
 pairs = []
 for i in range(46):
@@ -62,15 +61,13 @@ for i in range(46):
     print(f"{i:2}{t:>50b}")
     if t!=(1<<i)+(0<<i):
         pairs.append(i)
-prev=0
+
 
 def find(symbol,layer=0):
     for i in inp.splitlines():
         if "->" in i:
 
             A, operator, B, _, out = i.split(" ")
-            #if out[0]=="z" and operator!="XOR":
-            #    print(i)
             if out in replace:
                 out = replace[out]
             if symbol == out and layer<=2:
@@ -78,19 +75,6 @@ def find(symbol,layer=0):
             if symbol==out:
                 return out
                 return f"({symbol}={A} {operator} {B})"
-            """if "z" in out:
-                n = int(out[1:])
-                if n in pairs or n-1 in pairs:
-                    mapping[n]=[out,A,operator,B]
-            if operator == "OR":
-                d[out] = d.get(A, 0) | d.get(B, 0)
-            elif operator == "XOR":
-                d[out] = d.get(A, 0) ^ d.get(B, 0)
-            elif operator == "AND":
-                d[out] = d.get(A, 0) & d.get(B, 0)
-            else:
-                print(operator)
-            """
     return symbol
 
 for i in range(0,46):
